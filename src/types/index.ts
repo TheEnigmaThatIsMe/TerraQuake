@@ -60,3 +60,12 @@ export type PointData = {
     radius: number;
     color: string;
 };
+
+export type GlobePoint = {
+    altitude: number;
+    color: string;
+    id: string;
+    lat: number;
+    lng: number;
+    radius: number;
+}
