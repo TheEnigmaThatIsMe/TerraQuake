@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Globe, { GlobeMethods } from 'react-globe.gl';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import {EarthquakeData, EarthquakeFeature, GlobePoint, PointData} from '../types';
+import { EarthquakeData, EarthquakeFeature, GlobePoint, PointData } from '../types';
+import { EarthquakeDetailsModal } from './EarthquakeDetailsModal';
 
 type EarthquakeGlobeViewProps = {
     earthquakeData: EarthquakeData | null;
@@ -17,8 +17,9 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
         if (!earthquakeData) return;
 
         const newPoints = earthquakeData.features.map((feature) => {
-            const [longitude, latitude, depth] = feature.geometry.coordinates;
-            const magnitude = feature.properties.mag || 0;
+            const [longitude, latitude] = feature.geometry.coordinates;
+            const magnitude = feature.properties.mag ?? 0;
+            const significance = feature.properties.sig ?? 0;
 
             const colorScale = (mag: number) => {
                 const colors = [
@@ -31,7 +32,7 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
                 id: feature.id,
                 lat: latitude,
                 lng: longitude,
-                altitude: depth / 100,
+                altitude: significance / 2500, // typical values [0, 1000]
                 radius: 0.2,
                 color: colorScale(magnitude),
             };
@@ -40,18 +41,14 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
         setPoints(newPoints);
     }, [earthquakeData]);
 
-    const handleClick = (_point: object, _event: MouseEvent, coords: { lat: number; lng: number; altitude: number; }) => {
+    const handleClick = (_point: object) => {
         const globePoint = _point as GlobePoint;
         const earthquake = earthquakeData?.features.find(
             (feature) => feature.id === globePoint.id
         ) || null;
-        if(earthquake) {
-            console.log("Found earthquake:", earthquake);
+        if (earthquake) {
             setSelectedEarthquake(earthquake);
             setModalIsOpen(true);
-        } else {
-            console.log(_point);
-            console.log("Nothing found at ", coords);
         }
     };
 
@@ -64,8 +61,9 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
         <div>
             <Globe
                 ref={globeRef}
-                globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-                bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+                globeImageUrl="src/assets/earth_day.png"
+                bumpImageUrl="src/assets/earth_topo.png"
+                backgroundImageUrl={'src/assets/night-sky.png'}
                 pointsData={points}
                 pointAltitude="altitude"
                 pointColor="color"
@@ -73,22 +71,11 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
                 onPointClick={handleClick}
                 animateIn={true}
             />
-            <Dialog open={modalIsOpen} onClose={closeModal}>
-                <DialogTitle>Earthquake Details</DialogTitle>
-                <DialogContent>
-                    {selectedEarthquake && (
-                        <div>
-                            <p><strong>Location:</strong> {selectedEarthquake.properties.place}</p>
-                            <p><strong>Magnitude:</strong> {selectedEarthquake.properties.mag}</p>
-                            <p><strong>Time:</strong> {new Date(selectedEarthquake.properties.time).toLocaleString()}</p>
-                            <p><strong>Depth:</strong> {selectedEarthquake.geometry.coordinates[2]} km</p>
-                        </div>
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeModal} color="primary">Close</Button>
-                </DialogActions>
-            </Dialog>
+            <EarthquakeDetailsModal
+                selectedEarthquake={selectedEarthquake}
+                modalIsOpen={modalIsOpen}
+                closeModal={closeModal}
+            />
         </div>
     );
 };
