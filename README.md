@@ -1,50 +1,113 @@
-# React + TypeScript + Vite
+# TerraQuake
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TerraQuake is a dynamic web application designed to provide users with real-time information about earthquakes around the world. It leverages data from the United States Geological Survey (USGS) and displays it interactively using GeoJSON.
 
-Currently, two official plugins are available:
+---
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🌍 Global Earthquake Data
 
-## Expanding the ESLint configuration
+- Fetch and display up-to-date earthquake information directly from the USGS Earthquake GeoJSON Feed.
+- Includes detailed information about each earthquake, such as magnitude, location, depth, and time of occurrence.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 🗺️ Interactive Visualizations
 
-- Configure the top-level `parserOptions` property like this:
+- View earthquake data on an interactive globe.
+- Filter and explore earthquake details based on magnitude or time range.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### 🧰 Customizable Filters
+
+- Utilize a sidebar to filter earthquake data by:
+  - Magnitude thresholds.
+  - Date range.
+
+### 🛠️ Responsive and Intuitive UI
+- Designed for seamless navigation across devices.
+- Built with modern UI/UX principles.
+
+---
+## Getting Started
+
+### Prerequisites
+
+- Node.js (>= 14.x)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/terraquake.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd terraquake
+    ```
+
+3. Install dependencies:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+---
+## Running the Project
+
+To start the development server:
+
+```bash
+npm run dev
+# or
+yarn start
 ```
+The application will be accessible at http://localhost:5173
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
+## USGS Earthquake GeoJSON Data
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+TerraQuake uses the GeoJSON feed provided by USGS. For more information about the data and available endpoints, visit the [USGS GeoJSON documentation](https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php).
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
+Example GeoJSON Structure
+```JSON
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "generated": 1674321230000,
+    "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson",
+    "title": "USGS All Earthquakes, Past Week",
+    "count": 100
   },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.5,
+        "place": "5km SE of Volcano, Hawaii",
+        "time": 1674321023000
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -155.292,
+          19.380,
+          1.5
+        ]
+      },
+      "id": "hv72574562"
+    }
+  ]
+}
 ```
+---
+## Acknowledgments
+
+Thanks to [USGS](https://www.usgs.gov/programs/earthquake-hazards) for providing public earthquake data.
+
+Libraries used in the project:
+
+- React
+- Three.js
+- Other dependencies listed in package.json.
+
+Happy exploring the Earth's tremors with TerraQuake! 🌎
