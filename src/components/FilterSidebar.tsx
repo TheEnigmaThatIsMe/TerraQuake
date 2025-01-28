@@ -7,6 +7,13 @@ type FilterSidebarProps = {
     setFilter: React.Dispatch<React.SetStateAction<Filter>>;
 };
 
+const getMagnitudeLabel = (magnitude: string): string => {
+    if (magnitude === 'significant' || magnitude === 'all') {
+        return magnitude; // Preserve 'significant' and 'all' as-is
+    }
+    return `M${magnitude}+`; // Prepend 'M' for numeric magnitudes
+};
+
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter }) => (
     <Box style={{ backgroundColor: '#213547', padding: '1em' }}>
         <Typography variant={"h6"}>Earthquake Filters</Typography>
@@ -18,6 +25,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter 
                         key={period}
                         onClick={() => setFilter({ ...filter, period })}
                         style={{ display: 'block', margin: '5px 0' }}
+                        variant={filter.period === period ? 'contained' : 'outlined'}
                     >
                         Past {period.charAt(0).toUpperCase() + period.slice(1)}
                     </Button>
@@ -27,13 +35,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter 
         <Box sx={{ marginTop: 2 }}>
             <Typography variant={"body1"}>Magnitude</Typography>
             <ButtonGroup size="medium" variant="contained" orientation="vertical">
-                {(['significant', 'M4.5+', 'M2.5+', 'M1.0+', 'all'] as Filter['magnitude'][]).map((magnitude) => (
+                {(['significant', '4.5', '2.5', '1.0', 'all'] as Filter['magnitude'][]).map((magnitude) => (
                     <Button
                         key={magnitude}
                         onClick={() => setFilter({ ...filter, magnitude })}
                         style={{ display: 'block', margin: '5px 0' }}
+                        variant={filter.magnitude === magnitude ? 'contained' : 'outlined'}
                     >
-                        {`${magnitude}`}
+                        {getMagnitudeLabel(magnitude)}
                     </Button>
                 ))}
             </ButtonGroup>

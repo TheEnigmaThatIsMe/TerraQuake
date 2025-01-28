@@ -8,7 +8,7 @@ import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typograp
 const App: React.FC = () => {
     const isSmallScreen = useMediaQuery('(max-width:850px)');
     const [filter, setFilter] = React.useState<Filter>({
-        period: 'hour',
+        period: 'day',
         magnitude: 'all',
     });
 
