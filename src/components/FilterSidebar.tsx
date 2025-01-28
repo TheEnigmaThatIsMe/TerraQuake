@@ -7,7 +7,7 @@ type FilterSidebarProps = {
 };
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filter, setFilter }) => (
-    <div style={{ width: '300px', backgroundColor: '#213547', padding: '10px', overflowY: 'auto' }}>
+    <div style={{ backgroundColor: '#213547', padding: '1em' }}>
         <h2>Earthquake Filters</h2>
         <div>
             <h3>Time Period</h3>

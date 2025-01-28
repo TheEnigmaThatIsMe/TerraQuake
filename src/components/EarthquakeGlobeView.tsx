@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import Globe, { GlobeMethods } from 'react-globe.gl';
 import { EarthquakeData, EarthquakeFeature, GlobePoint, PointData } from '../types';
 import { EarthquakeDetailsModal } from './EarthquakeDetailsModal';
+import globeImageUrl from '../assets/earth_day.png';
+import globeTopoUrl from '../assets/earth_topo.png';
+import globeBackgroundUrl from '../assets/night-sky.png';
 
 type EarthquakeGlobeViewProps = {
     earthquakeData: EarthquakeData | null;
@@ -61,9 +64,9 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
         <div>
             <Globe
                 ref={globeRef}
-                globeImageUrl="src/assets/earth_day.png"
-                bumpImageUrl="src/assets/earth_topo.png"
-                backgroundImageUrl={'src/assets/night-sky.png'}
+                globeImageUrl={globeImageUrl}
+                bumpImageUrl={globeTopoUrl}
+                backgroundImageUrl={globeBackgroundUrl}
                 pointsData={points}
                 pointAltitude="altitude"
                 pointColor="color"
