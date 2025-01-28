@@ -2,9 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Globe, { GlobeMethods } from 'react-globe.gl';
 import { EarthquakeData, EarthquakeFeature, GlobePoint, PointData } from '../types';
 import { EarthquakeDetailsModal } from './EarthquakeDetailsModal';
-import globeImageUrl from '../assets/earth_day.png';
-import globeTopoUrl from '../assets/earth_topo.png';
-import globeBackgroundUrl from '../assets/night-sky.png';
 
 type EarthquakeGlobeViewProps = {
     earthquakeData: EarthquakeData | null;
@@ -15,6 +12,7 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
     const [points, setPoints] = useState<PointData[]>([]);
     const [selectedEarthquake, setSelectedEarthquake] = useState<EarthquakeFeature | null>(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
         if (!earthquakeData) return;
@@ -44,6 +42,12 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
         setPoints(newPoints);
     }, [earthquakeData]);
 
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const handleClick = (_point: object) => {
         const globePoint = _point as GlobePoint;
         const earthquake = earthquakeData?.features.find(
@@ -64,15 +68,17 @@ export const EarthquakeGlobeView: React.FC<EarthquakeGlobeViewProps> = ({ earthq
         <div>
             <Globe
                 ref={globeRef}
-                globeImageUrl={globeImageUrl}
-                bumpImageUrl={globeTopoUrl}
-                backgroundImageUrl={globeBackgroundUrl}
+                globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+                bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+                backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
                 pointsData={points}
                 pointAltitude="altitude"
                 pointColor="color"
                 pointRadius="radius"
                 onPointClick={handleClick}
                 animateIn={true}
+                width={windowWidth - 200}
+                height={window.innerHeight}
             />
             <EarthquakeDetailsModal
                 selectedEarthquake={selectedEarthquake}
